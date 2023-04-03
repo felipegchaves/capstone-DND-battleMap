@@ -1,5 +1,6 @@
 import CanvasDrawing from "./CanvasDrawing";
-import DragAndDrop from "./DragAndDrop";
+import DragAndDrop from "./components/DragAndDrop/DragAndDrop";
+import "./app.scss"
 
 function App() {
 
@@ -7,7 +8,7 @@ function App() {
   return (
     <>
       <div className="container">
-        {/* <CanvasDrawing /> */}
+        <CanvasDrawing />
         <DragAndDrop />
       </div>  
     </>
