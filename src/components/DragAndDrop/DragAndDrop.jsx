@@ -6,7 +6,7 @@ export default function DragAndDrop() {
   const [circles, setCircles] = useState([]);
 
   function addCircle() {
-    const newCircle = { id: circles.length + 1, x: 0, y: 0 };
+    const newCircle = { id: circles.length + 1, x: 500, y: 50 };
     setCircles([...circles, newCircle]);
   }
 
@@ -52,29 +52,20 @@ export default function DragAndDrop() {
   }
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: 50 }}>
+    <div className="circle-container">
       <button className="add-btn" onClick={addCircle}>Add Circle</button>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="circles">
-            {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef} id="circles">
-                {circles.map((circle, index) => (
-                  <Draggable key={circle.id} draggableId={circle.id.toString()} index={index}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="circles">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} id="circles">
+              {circles.map((circle, index) => (
+                <Draggable key={circle.id} draggableId={circle.id.toString()} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: "50%",
-                        backgroundColor: "blue",
-                        margin: 10,
-                        position: "absolute",
-                        left: circle.x,
-                        top: circle.y,
-                        cursor: "move"
-                      }}
+                      className="circle"
+                      style={{ left: circle.x, top: circle.y }}
                       onMouseDown={(event) => handleMouseDown(event, index)}
                       onMouseMove={(event) => handleMouseMove(event, index)}
                       onMouseUp={(event) => handleMouseUp(event, index)}
@@ -83,13 +74,12 @@ export default function DragAndDrop() {
                     </div>
                   )}
                 </Draggable>
-                
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }

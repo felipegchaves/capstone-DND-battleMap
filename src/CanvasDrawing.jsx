@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import './CanvasDrawing.scss'
 
 export default function CanvasDrawing() {
   const canvasRef = useRef(null);
@@ -49,24 +50,15 @@ export default function CanvasDrawing() {
   }
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="canvas">
       <canvas
+        className='canvas__background'
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
         ref={canvasRef}
       />
-      <button
-        style={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          zIndex: 1,
-        }}
-        onClick={clearCanvas}
-      >
-        Clear
-      </button>
+      <button className="clear-btn" onClick={clearCanvas}>Clear</button>
     </div>
   );
 }
