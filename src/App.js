@@ -9,11 +9,11 @@ function App() {
   return (
     <>
       <div className="flex">
-      <SideBar />
-      <div className="container">
-        <CanvasDrawing />
-        <DragAndDrop />
-      </div> 
+        <SideBar />
+        <div className="container">
+          <CanvasDrawing />
+          <DragAndDrop />
+        </div> 
       </div> 
     </>
   );
