@@ -3,12 +3,12 @@ import axios from 'axios';
 import './SideBar.scss';
 
 export default function SideBar() {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [search, setSearch] = useState(''); // might be able to remove, needs testing
     const [autocompleteResults, setAutocompleteResults] = useState([]);
     const [searchResult, setSearchResult] = useState(null);
 
     function handleSearch(event) {
-        setSearchQuery(event.target.value);
+        setSearch(event.target.value);
         }
 
     function handleAutocomplete(event) {
@@ -29,14 +29,14 @@ export default function SideBar() {
 
     function handleAutocompleteSelection(event) {
         const selectedMonsterName = event.target.textContent;
-        setSearchQuery(selectedMonsterName);
+        setSearch(selectedMonsterName);
         setAutocompleteResults([]);
         searchMonster(selectedMonsterName);
     }
 
     function searchMonster(name) {
         axios
-        .get(`http://localhost:8080/monsters?name=${name || searchQuery}`)
+        .get(`http://localhost:8080/monsters?name=${name || search}`)
         .then((response) => {
             setSearchResult(response.data);
         })
@@ -61,7 +61,7 @@ export default function SideBar() {
             <input
                 type="text"
                 placeholder="Search"
-                value={searchQuery}
+                value={search}
                 onChange={handleSearch}
                 onKeyUp={handleAutocomplete}
             />
