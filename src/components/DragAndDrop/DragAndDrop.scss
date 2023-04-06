@@ -4,6 +4,11 @@
 
 .add-btn {
   position: absolute;
+  top: 3rem;
+}
+
+.clearToken {
+  position: absolute;
   top: 1rem;
 }
 
@@ -17,8 +22,8 @@
   cursor: move;
 }
 
-.circle-container {
-  display: flex;
+.dragAndDrop {
+  // display: flex;
   justify-content: center;
   margin-top: 50px;
 }

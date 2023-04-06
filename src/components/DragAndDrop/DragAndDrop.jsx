@@ -51,9 +51,14 @@ export default function DragAndDrop() {
     setCircles(newCircles);
   }
 
+  function clearCircles() {
+    setCircles([]);
+  }
+
   return (
-    <div className="circle-container">
+    <div className="dragAndDrop">
       <button className="add-btn" onClick={addCircle}>Add Circle</button>
+      <button className="clearToken" onClick={clearCircles}>Clear Circles</button>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="circles">
           {(provided) => (

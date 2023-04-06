@@ -8,10 +8,10 @@ export default function CanvasDrawing() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = window.innerWidth * 2;
-    canvas.height = window.innerHeight * 2;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
+    canvas.width = window.innerWidth * 0.8 * 2;
+    canvas.height = window.innerHeight * 1 * 2;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
 
     const ctx = canvas.getContext("2d");
     ctx.scale(2, 2);
@@ -51,6 +51,7 @@ export default function CanvasDrawing() {
 
   return (
     <div className="canvas">
+      <button className="clear-btn" onClick={clearCanvas}>Clear</button>
       <canvas
         className='canvas__background'
         onMouseDown={startDrawing}
@@ -58,7 +59,6 @@ export default function CanvasDrawing() {
         onMouseMove={draw}
         ref={canvasRef}
       />
-      <button className="clear-btn" onClick={clearCanvas}>Clear</button>
     </div>
   );
 }

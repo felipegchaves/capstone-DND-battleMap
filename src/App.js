@@ -12,7 +12,7 @@ function App() {
         <SideBar />
         <div className="container">
           <CanvasDrawing />
-          {/* <DragAndDrop /> */}
+          <DragAndDrop />
         </div> 
       </div> 
     </>
