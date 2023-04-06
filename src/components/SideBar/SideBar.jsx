@@ -57,7 +57,7 @@ export default function SideBar() {
 
     return (
         <div className="sidebar">
-            <h1 className="sidebar__title">DND BattleMap</h1>
+            <h1 className="sidebar__title">title</h1>
             <form onSubmit={handleSubmit}>
             <input
                 type="text"
@@ -75,6 +75,10 @@ export default function SideBar() {
             </ul>
             <button className='sidebar__searchBtn' type="submit">Search</button>
             </form>
+            {/* list for populated monsters/players */}
+            <div>
+
+            </div>
         </div>
     );
 }

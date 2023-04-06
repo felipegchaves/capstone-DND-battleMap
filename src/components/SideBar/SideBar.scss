@@ -2,12 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: aqua;
+    background-color: #F7CE65;
     width: 20vw;
+    border-right: 0.25rem solid #290000;
     &__title {
     }
     &__searchBtn {
-        display: none;
+        // display: none;
     }
 }
 
