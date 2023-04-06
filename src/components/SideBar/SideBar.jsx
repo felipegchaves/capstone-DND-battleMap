@@ -39,6 +39,7 @@ export default function SideBar() {
         .get(`http://localhost:8080/monsters?name=${name || search}`)
         .then((response) => {
             setSearchResult(response.data);
+            setSearch('');
         })
         .catch((error) => {
             console.error(error);
