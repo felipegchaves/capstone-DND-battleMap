@@ -1,22 +1,13 @@
 .canvas {
     position: relative;
-    // width: 100%;
-    // width: 80vw;
-    // height: 100%;
     &__background {
     background-image: url('./assets/dnd-grid.png');
     background-size: contain;
-    // background-repeat: repeat;
     background-size: 40%;
-    // width: 100%;
-    // height: 100%;
     }
 }
 
 .clear-btn {
     position: absolute;
-    // position: relative;
     top: 5rem;
-    // left: 10px;
-    // z-index: 1;
 }

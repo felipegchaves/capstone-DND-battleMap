@@ -4,6 +4,38 @@ import "./CanvasDrawing.scss";
 export default function CanvasDrawing({ canvasRef }) {
   const ctxRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [drawingPath, setDrawingPath] = useState([]);
+
+  useEffect(() => {
+    const data = localStorage.getItem('battleMapLines')
+    // console.log(data)
+    if (data !== null ) setDrawingPath(JSON.parse(data))
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    
+    // Redraw existing drawing paths
+    drawingPath.forEach(path => {
+      switch (path.type) {
+        case "start":
+          ctx.beginPath();
+          ctx.moveTo(path.x, path.y);
+          break;
+        case "draw":
+          ctx.lineTo(path.x, path.y);
+          ctx.stroke();
+          break;
+        case "finish":
+          ctx.closePath();
+          break;
+        default:
+          break;
+      }
+    });
+  }, [canvasRef, drawingPath]);
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,6 +51,17 @@ export default function CanvasDrawing({ canvasRef }) {
     ctx.lineWidth = 5;
 
     ctxRef.current = ctx;
+
+    function handleResize() {
+      window.location.reload();
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+
   }, [canvasRef]);
 
   function startDrawing({ nativeEvent }) {
@@ -26,13 +69,16 @@ export default function CanvasDrawing({ canvasRef }) {
     ctxRef.current.beginPath();
     ctxRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
+    setDrawingPath(prevPath => [...prevPath, { type: "start", x: offsetX, y: offsetY }]);
   }
-
+  
   function finishDrawing() {
     ctxRef.current.closePath();
     setIsDrawing(false);
+    setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
+    saveToLocalStorage();
   }
-
+  
   function draw({ nativeEvent }) {
     if (!isDrawing) {
       return;
@@ -40,6 +86,12 @@ export default function CanvasDrawing({ canvasRef }) {
     const { offsetX, offsetY } = nativeEvent;
     ctxRef.current.lineTo(offsetX, offsetY);
     ctxRef.current.stroke();
+    setDrawingPath(prevPath => [...prevPath, { type: "draw", x: offsetX, y: offsetY }]);
+  }
+  
+
+  function saveToLocalStorage() {
+    localStorage.setItem("battleMapLines", JSON.stringify(drawingPath));
   }
 
   return (

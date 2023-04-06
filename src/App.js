@@ -1,70 +1,73 @@
 import CanvasDrawing from "./CanvasDrawing";
-import DragAndDrop from "./components/DragAndDrop/DragAndDrop";
 import SideBar from "./components/SideBar/SideBar";
 import ControlPanel from "./components/ControlPanel/ControlPanel";
 import "./app.scss";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useRef,useState } from "react";
+import { useRef, useState } from "react";
 
 function App() {
   const canvasRef = useRef(null);
-  
+
   function clearCanvas() {
+    localStorage.removeItem("battleMapLines");
+  
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    window.location.reload();
   }
   
-  const [circles, setCircles] = useState([]);
 
-  function addCircle() {
-    const newCircle = { id: circles.length + 1, x: 500, y: 50 };
-    setCircles([...circles, newCircle]);
+  const [tokens, setTokens] = useState([]);
+
+  function addToken() {
+    const newToken = { id: tokens.length + 1, x: 100, y: 0 };
+    setTokens([...tokens, newToken]);
   }
 
   function onDragEnd(result) {
     if (!result.destination) {
       return;
     }
-    const newCircles = [...circles];
-    const [reorderedItem] = newCircles.splice(result.source.index, 1);
-    newCircles.splice(result.destination.index, 0, reorderedItem);
-    setCircles(newCircles);
+    const newTokens = [...tokens];
+    const [reorderedItem] = newTokens.splice(result.source.index, 1);
+    newTokens.splice(result.destination.index, 0, reorderedItem);
+    setTokens(newTokens);
   }
 
   function handleMouseDown(event, index) {
-    const newCircles = [...circles];
-    const circle = newCircles[index];
-    circle.dragging = true;
-    circle.dragStartX = event.clientX;
-    circle.dragStartY = event.clientY;
-    setCircles(newCircles);
+    const newTokens = [...tokens];
+    const token = newTokens[index];
+    token.dragging = true;
+    token.dragStartX = event.clientX;
+    token.dragStartY = event.clientY;
+    setTokens(newTokens);
   }
 
   function handleMouseMove(event, index) {
-    const newCircles = [...circles];
-    const circle = newCircles[index];
-    if (!circle.dragging) {
+    const newTokens = [...tokens];
+    const token = newTokens[index];
+    if (!token.dragging) {
       return;
     }
-    const deltaX = event.clientX - circle.dragStartX;
-    const deltaY = event.clientY - circle.dragStartY;
-    circle.x += deltaX;
-    circle.y += deltaY;
-    circle.dragStartX = event.clientX;
-    circle.dragStartY = event.clientY;
-    setCircles(newCircles);
+    const deltaX = event.clientX - token.dragStartX;
+    const deltaY = event.clientY - token.dragStartY;
+    token.x += deltaX;
+    token.y += deltaY;
+    token.dragStartX = event.clientX;
+    token.dragStartY = event.clientY;
+    setTokens(newTokens);
   }
 
   function handleMouseUp(event, index) {
-    const newCircles = [...circles];
-    const circle = newCircles[index];
-    circle.dragging = false;
-    setCircles(newCircles);
+    const newTokens = [...tokens];
+    const token = newTokens[index];
+    token.dragging = false;
+    setTokens(newTokens);
   }
 
-  function clearCircles() {
-    setCircles([]);
+  function clearTokens() {
+    setTokens([]);
   }
 
   return (
@@ -74,23 +77,23 @@ function App() {
         <div className="container">
           <ControlPanel
             clearCanvas={clearCanvas}
-            addCircle={addCircle}
-            clearCircles={clearCircles}
+            addToken={addToken}
+            clearTokens={clearTokens}
           />
           <CanvasDrawing canvasRef={canvasRef} />
           <div className="dragAndDrop">
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="circles">
+              <Droppable droppableId="tokens">
                 {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} id="circles">
-                    {circles.map((circle, index) => (
-                      <Draggable key={circle.id} draggableId={circle.id.toString()} index={index}>
+                  <div {...provided.droppableProps} ref={provided.innerRef} id="tokens">
+                    {tokens.map((token, index) => (
+                      <Draggable key={token.id} draggableId={token.id.toString()} index={index}>
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className="circle"
-                            style={{ left: circle.x, top: circle.y }}
+                            className="token"
+                            style={{ left: token.x, top: token.y }}
                             onMouseDown={(event) => handleMouseDown(event, index)}
                             onMouseMove={(event) => handleMouseMove(event, index)}
                             onMouseUp={(event) => handleMouseUp(event, index)}

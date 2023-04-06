@@ -1,19 +1,17 @@
 import { useState } from "react";
 import './ControlPanel.scss'
 
-export default function ControlPanel({ clearCanvas, addCircle, clearCircles }) {
+export default function ControlPanel({ clearCanvas, addToken, clearTokens }) {
 
-  function handleClearBtn() {
+    function handleClearBtn() {
     clearCanvas();
-  }
+    }
 
-  return (
-    <div className="controlPanel">
-        {/* <div className="ControlPanel__btns"> */}
+    return (
+        <div className="controlPanel">
             <button onClick={handleClearBtn}>clear</button>
-            <button onClick={clearCircles}>Clear Circles</button>
-            <button onClick={addCircle}>Add Circle</button>
-        {/* </div> */}
-    </div>
-  );
+            <button onClick={clearTokens}>Clear Tokens</button>
+            <button onClick={addToken}>Add Token</button>
+        </div>
+    );
 }
