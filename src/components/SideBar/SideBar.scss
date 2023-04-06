@@ -6,4 +6,15 @@
     width: 20vw;
     &__title {
     }
+    &__searchBtn {
+        display: none;
+    }
+}
+
+.autocomplete {
+    background-color: white;
+    position: absolute;
+    margin: 0;
+    padding: 5px;
+    list-style: none;
 }
