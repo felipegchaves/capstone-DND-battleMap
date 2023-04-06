@@ -3,12 +3,12 @@
 }
 
 .add-btn {
-  position: absolute;
+  // position: absolute;
   top: 3rem;
 }
 
 .clearToken {
-  position: absolute;
+  // position: absolute;
   top: 1rem;
 }
 
@@ -23,6 +23,8 @@
 }
 
 .dragAndDrop {
+  // position: relative;
+  position: absolute;
   // display: flex;
   justify-content: center;
   margin-top: 50px;
