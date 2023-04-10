@@ -1,0 +1,41 @@
+.selected {
+    border: 3px solid blue;
+}
+
+.modal {
+    // width: 100%;
+    &__title {
+        text-align: center;
+    }
+    &__context {
+        margin: 2rem;
+        &--inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        &--iconSelector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 0 auto;
+            height: 100px;
+            width: 100px;
+        }
+        &--btn {
+            width: 5rem;
+            height: 2rem;
+            border: none;
+            box-shadow: 10px 5px 5px black;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
+.btn__container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+}

@@ -1,6 +1,7 @@
 import CanvasDrawing from "./CanvasDrawing";
 import SideBar from "./components/SideBar/SideBar";
 import ControlPanel from "./components/ControlPanel/ControlPanel";
+import Footer from "./components/Footer/Footer";
 import "./app.scss";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useRef, useState } from "react";
@@ -73,7 +74,9 @@ function App() {
   return (
     <>
       <div className="flex">
-        <SideBar />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <SideBar />
+        </DragDropContext>
         <div className="container">
           <ControlPanel
             clearCanvas={clearCanvas}
@@ -111,6 +114,7 @@ function App() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

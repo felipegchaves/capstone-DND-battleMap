@@ -1,0 +1,20 @@
+.footer {
+    &__box {
+        position: fixed;
+        background-color: #00171f;
+        height: 2rem;
+        width: 100%;
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        gap: 1rem;
+        &--title {
+            margin-left: 3rem;
+        }
+        &--author {
+            margin-right: 1rem;
+        }
+    }
+}

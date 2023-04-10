@@ -1,17 +1,4 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    
-}
-*:before, *:after { 
-    margin: 0;
-    padding: 0;
-    box-sizing: inherit;
-}
-
-
+@use './syles/global' as *;
 
 .container {
     display: flex;

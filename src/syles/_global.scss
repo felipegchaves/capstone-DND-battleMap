@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@100;400;700&family=Titillium+Web:wght@400;600&display=swap');
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Anuphan', sans-serif;
+    font-family: 'Titillium Web', sans-serif;
+}
+*:before, *:after { 
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+.card {
+    min-width: 80%;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    background-color: #d2cca1;
+    border: 5px solid #5c1a1b;
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(65,63,52,1) 0%, rgba(210,204,161,1) 5%, rgba(255,255,255,1) 100%);
+    padding-bottom: 0.75rem;
+    margin: 0.5rem auto;
+    cursor: pointer;
+    &__img {
+        width: 75px;
+        height: 75px;
+    }
+    &__remove--btn {
+        border: none;
+        border-radius: 5px;
+        padding: 0 10px;
+        cursor: pointer;
+        &:hover {
+            filter: brightness(50%);
+        }
+    }
+}
