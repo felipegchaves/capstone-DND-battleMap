@@ -127,7 +127,7 @@ export default function Homepage() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
