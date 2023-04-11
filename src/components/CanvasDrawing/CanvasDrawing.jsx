@@ -63,31 +63,93 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
 
   }, [canvasRef]);
 
-  function startDrawing({ nativeEvent }) {
+  // function startDrawing({ nativeEvent }) {
+  //   const { offsetX, offsetY } = nativeEvent;
+  //   ctxRef.current.beginPath();
+  //   ctxRef.current.moveTo(offsetX, offsetY);
+  //   setIsDrawing(true);
+  //   setDrawingPath(prevPath => [...prevPath, { type: "start" }]);
+  // }
+
+  // function draw({ nativeEvent }) {
+  //   if (!isDrawing) {
+  //     return;
+  //   }
+  //   const { offsetX, offsetY } = nativeEvent;
+  //   ctxRef.current.lineTo(offsetX, offsetY);
+  //   ctxRef.current.stroke();
+  // }
+
+  // function finishDrawing() {
+  //   ctxRef.current.closePath();
+  //   setIsDrawing(false);
+  //   setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
+  //   saveToLocalStorage();
+  // }
+  function handleDrawingEvent(event) {
+    const { nativeEvent } = event;
     const { offsetX, offsetY } = nativeEvent;
-    ctxRef.current.beginPath();
-    ctxRef.current.moveTo(offsetX, offsetY);
-    setIsDrawing(true);
-    setDrawingPath(prevPath => [...prevPath, { type: "start", x: offsetX, y: offsetY }]);
-  }
+    const { current: ctx } = ctxRef;
+    
   
-  function finishDrawing() {
-    ctxRef.current.closePath();
-    setIsDrawing(false);
-    setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
-    saveToLocalStorage();
-  }
-  
-  function draw({ nativeEvent }) {
-    if (!isDrawing) {
-      return;
+    switch (event.type) {
+      case "mousedown":
+        ctx.beginPath();
+        ctx.moveTo(offsetX, offsetY);
+        setIsDrawing(true);
+        setDrawingPath(prevPath => [...prevPath, { type: "start", x: offsetX, y: offsetY }]);
+        break;
+      case "mousemove":
+        if (!isDrawing) {
+          return;
+        }
+        ctx.lineTo(offsetX, offsetY);
+        ctx.stroke();
+        // setDrawingPath(prevPath => [...prevPath, { type: "draw", x: offsetX, y: offsetY }]);
+        break;
+      case "mouseup":
+        ctx.closePath();
+        setIsDrawing(false);
+        setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
+        saveToLocalStorage();
+        break;
+      default:
+        break;
     }
-    const { offsetX, offsetY } = nativeEvent;
-    ctxRef.current.lineTo(offsetX, offsetY);
-    ctxRef.current.stroke();
-    setDrawingPath(prevPath => [...prevPath, { type: "draw", x: offsetX, y: offsetY }]);
   }
+  function undo() {
+    setDrawingPath(prevPath => prevPath.slice(0, -1));
+    // refreshCanvas();
+  }
+
+  function refreshCanvas() {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   
+    drawingPath.forEach((path) => {
+      switch (path.type) {
+        case "start":
+          ctx.beginPath();
+          ctx.moveTo(path.x, path.y);
+          break;
+        case "draw":
+          ctx.lineTo(path.x, path.y);
+          ctx.stroke();
+          break;
+        case "finish":
+          ctx.closePath();
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  // useEffect(() => {
+  //   refreshCanvas();
+  // }, [drawingPath]);
+
 
   function saveToLocalStorage() {
     localStorage.setItem("battleMapLines", JSON.stringify(drawingPath));
@@ -98,16 +160,20 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setDrawingPath([])
+    localStorage.removeItem('battleMapLines');
   }
 
   return (
     <div className="canvas">
-      <ControlPanel clearCanvas={clearCanvas} clearTokens={clearTokens} />
+      <ControlPanel clearCanvas={clearCanvas} clearTokens={clearTokens} undo={undo} />
       <canvas
         className="canvas__background"
-        onMouseDown={startDrawing}
-        onMouseUp={finishDrawing}
-        onMouseMove={draw}
+        // onMouseDown={startDrawing}
+        // onMouseMove={draw}
+        // onMouseUp={finishDrawing}
+        onMouseDown={handleDrawingEvent}
+        onMouseMove={handleDrawingEvent}
+        onMouseUp={handleDrawingEvent}
         ref={canvasRef}
       />
     </div>
