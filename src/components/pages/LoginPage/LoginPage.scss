@@ -1,0 +1,44 @@
+@use '../../../styles/mixins';
+@use '../../../styles/variables' as *;
+
+.background {
+    position: fixed;
+    background-image: url(../../../assets/login-background.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+.login {
+    width: 25rem;
+    margin: 10rem auto 0;
+    background-color: rgba(79, 82, 82, 0.5);
+    backdrop-filter: blur(3px);
+    border-radius: 15px;
+    &__title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        &--btn {
+            text-align: center;
+            color: white;
+            width: 5rem;
+            background-color: darkgray;
+            border-radius: 10px;
+            padding: 0.05rem 1rem;
+            margin-bottom: 1rem;
+            &:hover {
+                filter: brightness(70%);
+            }
+        }
+    }
+}

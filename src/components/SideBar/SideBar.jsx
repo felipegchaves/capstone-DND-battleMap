@@ -124,7 +124,7 @@ useEffect(() => {
                 />
                 <ul className={autocompleteResults.length > 0 ? "autocomplete" : "autocomplete hidden"}>
                     {autocompleteResults.map((monster, index) => (
-                    <li key={monster.index} data-index={index} onClick={handleAutocompleteSelection}>
+                    <li className='autocomplete__item' key={monster.index} data-index={index} onClick={handleAutocompleteSelection}>
                         {monster.index}
                     </li>
                     ))}
