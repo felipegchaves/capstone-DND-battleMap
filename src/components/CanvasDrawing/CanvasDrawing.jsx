@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./CanvasDrawing.scss";
+import ControlPanel from "../ControlPanel/ControlPanel";
 
-export default function CanvasDrawing({ canvasRef }) {
+export default function CanvasDrawing({ canvasRef, clearTokens }) {
   const ctxRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawingPath, setDrawingPath] = useState([]);
 
   useEffect(() => {
     const data = localStorage.getItem('battleMapLines')
-    // console.log(data)
     if (data !== null ) setDrawingPath(JSON.parse(data))
   }, [])
 
@@ -16,7 +16,6 @@ export default function CanvasDrawing({ canvasRef }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     
-    // Redraw existing drawing paths
     drawingPath.forEach(path => {
       switch (path.type) {
         case "start":
@@ -94,8 +93,16 @@ export default function CanvasDrawing({ canvasRef }) {
     localStorage.setItem("battleMapLines", JSON.stringify(drawingPath));
   }
 
+  function clearCanvas() {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setDrawingPath([])
+  }
+
   return (
     <div className="canvas">
+      <ControlPanel clearCanvas={clearCanvas} clearTokens={clearTokens} />
       <canvas
         className="canvas__background"
         onMouseDown={startDrawing}

@@ -1,54 +1,69 @@
-import CanvasDrawing from "./CanvasDrawing";
+import CanvasDrawing from './components/CanvasDrawing/CanvasDrawing'
 import SideBar from "./components/SideBar/SideBar";
-import ControlPanel from "./components/ControlPanel/ControlPanel";
 import Footer from "./components/Footer/Footer";
+import anonMonster from './assets/monsterQuestionMark.png'
 import "./app.scss";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { API_URL } from "./utils/api";
 
 function App() {
   const canvasRef = useRef(null);
-
-  function clearCanvas() {
-    localStorage.removeItem("battleMapLines");
   
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    window.location.reload();
+  const [tokens, setTokens] = useState(loadTokensFromLocalStorage());
+
+  useEffect(() => {
+    saveTokensToLocalStorage(tokens);
+  }, [tokens]);
+
+  function addMonsterToken(monster) {
+    let nextNumber = tokens.length + 1;
+    while (tokens.some(token => token.number === nextNumber)) {
+      nextNumber++;
+    }
+    const newToken = {
+      id: nextNumber,
+      number: nextNumber,
+      x: 100,
+      y: 0,
+      name: monster.name,
+      image: monster.image
+        ? `https://www.dnd5eapi.co${monster.image}`
+        : anonMonster
+    };
+    setTokens([...tokens, newToken]);
   }
   
-
-  const [tokens, setTokens] = useState([]);
-
-  function addToken() {
-    const newToken = { id: tokens.length + 1, x: 100, y: 0 };
+  function addPlayerToken(player) {
+    let nextNumber = tokens.length + 1;
+    while (tokens.some(token => token.number === nextNumber)) {
+      nextNumber++;
+    }
+    const newToken = {
+      id: nextNumber,
+      number: nextNumber,
+      x: 100,
+      y: 0,
+      name: player.name,
+      image: player.icon
+    };
     setTokens([...tokens, newToken]);
   }
 
-  function onDragEnd(result) {
-    if (!result.destination) {
-      return;
-    }
-    const newTokens = [...tokens];
-    const [reorderedItem] = newTokens.splice(result.source.index, 1);
-    newTokens.splice(result.destination.index, 0, reorderedItem);
-    setTokens(newTokens);
-  }
-
   function handleMouseDown(event, index) {
+    event.preventDefault()
     const newTokens = [...tokens];
     const token = newTokens[index];
-    token.dragging = true;
+    token.isDragging = true;
     token.dragStartX = event.clientX;
     token.dragStartY = event.clientY;
+    token.className = "token isDragging";
     setTokens(newTokens);
   }
-
+  
   function handleMouseMove(event, index) {
     const newTokens = [...tokens];
     const token = newTokens[index];
-    if (!token.dragging) {
+    if (!token.isDragging) {
       return;
     }
     const deltaX = event.clientX - token.dragStartX;
@@ -59,11 +74,12 @@ function App() {
     token.dragStartY = event.clientY;
     setTokens(newTokens);
   }
-
+  
   function handleMouseUp(event, index) {
     const newTokens = [...tokens];
     const token = newTokens[index];
-    token.dragging = false;
+    token.isDragging = false;
+    token.className = "token";
     setTokens(newTokens);
   }
 
@@ -71,46 +87,43 @@ function App() {
     setTokens([]);
   }
 
+  function handleContextMenu(event, index) {
+    event.preventDefault();
+    const newTokens = [...tokens];
+    newTokens.splice(index, 1);
+    setTokens(newTokens);
+  }
+  
+  function saveTokensToLocalStorage(tokens) {
+    localStorage.setItem('tokens', JSON.stringify(tokens));
+  }
+  
+  function loadTokensFromLocalStorage() {
+    const tokensJson = localStorage.getItem('tokens');
+    return tokensJson ? JSON.parse(tokensJson) : [];
+  }
+  
   return (
     <>
       <div className="flex">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <SideBar />
-        </DragDropContext>
+        <SideBar addMonsterToken={addMonsterToken} addPlayerToken={addPlayerToken} />
         <div className="container">
-          <ControlPanel
-            clearCanvas={clearCanvas}
-            addToken={addToken}
-            clearTokens={clearTokens}
-          />
-          <CanvasDrawing canvasRef={canvasRef} />
+          <CanvasDrawing clearTokens={clearTokens} canvasRef={canvasRef} />
           <div className="dragAndDrop">
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="tokens">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} id="tokens">
-                    {tokens.map((token, index) => (
-                      <Draggable key={token.id} draggableId={token.id.toString()} index={index}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className="token"
-                            style={{ left: token.x, top: token.y }}
-                            onMouseDown={(event) => handleMouseDown(event, index)}
-                            onMouseMove={(event) => handleMouseMove(event, index)}
-                            onMouseUp={(event) => handleMouseUp(event, index)}
-                          >
-                            <span className="drag-handle" {...provided.dragHandleProps} />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+            {tokens.map((token, index) => (
+              <div
+                key={token.id}
+                className={`token ${token.className}`}
+                style={{ left: token.x, top: token.y }}
+                onContextMenu={(event) => handleContextMenu(event, index)}
+                onMouseDown={(event) => handleMouseDown(event, index)}
+                onMouseMove={(event) => handleMouseMove(event, index)}
+                onMouseUp={(event) => handleMouseUp(event, index)}
+              >
+                <img src={token.image} alt="" />
+                <span key={index} className="token__number">{token.name}{token.number}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

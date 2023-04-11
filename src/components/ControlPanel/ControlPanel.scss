@@ -1,9 +1,13 @@
+@use '../../styles/mixins';
+@use '../../styles/variables' as *;
+
 .controlPanel {
-    display: flex;
-    gap: 0.5rem;
-    margin: 0.75rem;
-    position: absolute;
-    z-index: 1;
-    &__btns {
+    display: none;
+    @include mixins.tablet {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0.75rem;
+        position: absolute;
+        z-index: 1;
     }
 }

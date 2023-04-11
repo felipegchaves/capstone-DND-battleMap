@@ -1,16 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { v4 as uuid } from 'uuid'
 import axios from 'axios';
 import './SideBar.scss';
 import RenderMonsterCard from '../RenderMonstercard/RenderMonsterCard';
 import AddPlayer from '../AddPlayer/AddPlayer';
 import Modal from 'react-modal';
 import RenderPlayerCard from '../RenderPlayerCard/RenderPlayerCard';
+import { API_URL } from "../../utils/api";
+import { CLIENT_URL } from '../../utils/client';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-export default function SideBar() {
+export default function SideBar({ addToken, addMonsterToken, addPlayerToken }) {
     const [search, setSearch] = useState('');
     const [autocompleteResults, setAutocompleteResults] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const prevSearchResultsRef = useRef(searchResults);
+
+
+    useEffect(() => {
+        axios.get(`${API_URL}/list`)
+        .then(response => {
+            setSearchResults(response.data);
+        })
+        .catch(error => {
+            console.log('yikers', error);
+        });
+    }, []);
+
+
+useEffect(() => {
+    async function saveResults() {
+        if (prevSearchResultsRef.current !== searchResults) {
+        try {
+            await axios.post(`${API_URL}/list`, searchResults);
+            prevSearchResultsRef.current = searchResults;
+        } catch (error) {
+            console.error(error);
+        }
+        }
+    }
+    saveResults();
+}, [searchResults]);
 
     function handleSearch(event) {
         setSearch(event.target.value);
@@ -20,7 +51,7 @@ export default function SideBar() {
         const searchName = event.target.value.trim();
         if (searchName !== '') {
             axios
-            .get(`http://localhost:8080/monsters?autocomplete=${searchName}`)
+            .get(`${API_URL}/monsters?autocomplete=${searchName}`)
             .then((response) => {
                 setAutocompleteResults(response.data);
             })
@@ -41,9 +72,12 @@ export default function SideBar() {
 
     function searchMonster(name) {
         axios
-        .get(`http://localhost:8080/monsters?name=${name || search}`)
+        .get(`${API_URL}/monsters?name=${name || search}`)
         .then((response) => {
-            setSearchResults((prevSearchResults) => [...prevSearchResults, response.data]);
+            const monsterData = response.data;
+            // Add tokenNumber property to monsterData
+            monsterData.tokenNumber = 0; // Set initial token number to 0
+            setSearchResults((prevSearchResults) => [...prevSearchResults, monsterData]);
             setSearch('');
         })
         .catch((error) => {
@@ -63,7 +97,7 @@ export default function SideBar() {
         const newPlayer = {
             name: playerName,
             hit_points: playerHp,
-            icon: `http://localhost:3000${selectedTokenImage}`
+            icon: `${CLIENT_URL}${selectedTokenImage}`
         };
         setSearchResults((prevSearchResults) => [...prevSearchResults, newPlayer]);
         setShowModal(false);
@@ -80,7 +114,7 @@ export default function SideBar() {
     return (
         <div className="sidebar">
             <h1 className="sidebar__title">BattleMap</h1>
-            <form>
+            <form onSubmit={(event) => {event.preventDefault(); searchMonster(search);}}>
                 <input
                     type="text"
                     placeholder="Search"
@@ -88,9 +122,9 @@ export default function SideBar() {
                     onChange={handleSearch}
                     onKeyUp={handleAutocomplete}
                 />
-                <ul className="autocomplete">
+                <ul className={autocompleteResults.length > 0 ? "autocomplete" : "autocomplete hidden"}>
                     {autocompleteResults.map((monster, index) => (
-                    <li key={monster.id} data-index={index} onClick={handleAutocompleteSelection}>
+                    <li key={uuid()} data-index={index} onClick={handleAutocompleteSelection}>
                         {monster.index}
                     </li>
                     ))}
@@ -107,11 +141,23 @@ export default function SideBar() {
             </button>
             <ul className="list">
             {searchResults.map((result, index) => (
-                <li key={result.id || index}>
+                <li key={uuid()}>
                 {result.challenge_rating ? (
-                    <RenderMonsterCard monster={result} index={index} removeCard={handleRemoveCard} />
+                    <RenderMonsterCard 
+                        addToken={addToken}
+                        addMonsterToken={addMonsterToken}
+                        monster={result} 
+                        index={index} 
+                        removeCard={handleRemoveCard} 
+                    />
                 ) : (
-                    <RenderPlayerCard player={result} index={index} removeCard={handleRemoveCard} />
+                    <RenderPlayerCard 
+                        addToken={addToken}
+                        addPlayerToken={addPlayerToken}
+                        player={result} 
+                        index={index} 
+                        removeCard={handleRemoveCard}
+                    />
                 )}
                 </li>
             ))}

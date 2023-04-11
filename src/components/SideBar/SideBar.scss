@@ -1,14 +1,24 @@
+@use '../../styles/mixins';
+@use '../../styles/variables' as *;
+
 .sidebar {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #F7CE65;
-    width: 20vw;
-    border-right: 0.25rem solid #290000;
+    width: 100%;
+    border-bottom: 0.25rem solid #290000;
+    padding-bottom: 1rem;
+    @include mixins.tablet {
+        border-right: 0.25rem solid #290000;
+        width: 20vw;
+    }
     &__title {
     }
     &__searchBtn {
         display: none;
+    }
+    &__addBtn {
     }
 }
 .list {
@@ -26,11 +36,15 @@
     border: 5px solid #5c1a1b;
     outline: none;
     padding: 20px;
-    height: 23rem;
-    width: 45rem;
     top: 40%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -40%);
+    width: 15rem;
+    height: 80%;
+    @include mixins.tablet {
+        width: 45rem;
+        height: 23rem;
+    }
 }
 
 .autocomplete {
@@ -39,4 +53,14 @@
     margin: 0;
     padding: 5px;
     list-style: none;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 767px) {
+    .mobile__size {
+        display: none;
+    }
 }

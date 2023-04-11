@@ -1,0 +1,22 @@
+@use '../../styles/mixins';
+@use '../../styles/variables' as *;
+
+.canvas {
+    display: none;
+    @include mixins.tablet {
+        display: contents;
+        position: relative;
+    max-width: 100%;
+    &__background {
+        background-size: cover;
+    @include mixins.tablet {
+        background-image: url('../../assets/dnd-grid.png');
+            }
+        }
+    }
+}
+
+.clear-btn {
+    position: absolute;
+    top: 5rem;
+}

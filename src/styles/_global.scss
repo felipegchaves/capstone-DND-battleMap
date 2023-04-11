@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@100;400;700&family=Titillium+Web:wght@400;600&display=swap');
-
+@use './mixins';
+@use './fonts';
+@use './variables' as *;
 
 * {
     padding: 0;
@@ -15,6 +16,17 @@
     box-sizing: inherit;
 }
 
+button {
+    text-transform: uppercase;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    &:hover {
+        filter: brightness(70%);
+    }
+}
 .card {
     min-width: 80%;
     display: flex;
@@ -31,13 +43,9 @@
         width: 75px;
         height: 75px;
     }
-    &__remove--btn {
-        border: none;
-        border-radius: 5px;
-        padding: 0 10px;
-        cursor: pointer;
-        &:hover {
-            filter: brightness(50%);
+    &__token {
+        &--number {
+            background-color: aqua;
         }
     }
 }
