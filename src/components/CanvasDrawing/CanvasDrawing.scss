@@ -10,7 +10,8 @@
     &__background {
         background-size: cover;
     @include mixins.tablet {
-        background-image: url('../../assets/dnd-grid.png');
+            background-color: rgb(65, 62, 62);
+            background-image: url('../../assets/dnd-grid.png');
             }
         }
     }

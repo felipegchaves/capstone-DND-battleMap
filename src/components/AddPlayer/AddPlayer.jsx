@@ -44,10 +44,6 @@ export default function AddPlayer({ closeModal, addPlayer }) {
                 Player Name: 
                 <input type="text" value={name} onChange={handleNameChange} />
                 </label>
-                <label>
-                Player HP: 
-                <input type="number" value={hp} onChange={handleHpChange} />
-                </label>
             </div>
             <div className="modal__context--iconSelector">
             {playerTokens.map(token => (

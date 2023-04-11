@@ -72,22 +72,23 @@ useEffect(() => {
 
     function searchMonster(name) {
         axios
-        .get(`${API_URL}/monsters?name=${name || search}`)
-        .then((response) => {
+            .get(`${API_URL}/monsters?name=${name || search}`)
+            .then((response) => {
             const monsterData = response.data;
-            // Add tokenNumber property to monsterData
-            monsterData.tokenNumber = 0; // Set initial token number to 0
+            monsterData.tokenNumber = 0;
+            monsterData.id = searchResults.length;
             setSearchResults((prevSearchResults) => [...prevSearchResults, monsterData]);
             setSearch('');
-        })
-        .catch((error) => {
+            })
+            .catch((error) => {
             console.error(error);
-        });
+            });
     }
 
-    function handleRemoveCard(index) {
+    function handleRemoveCard(id) {
         setSearchResults((prevSearchResults) => {
             const updatedResults = [...prevSearchResults];
+            const index = updatedResults.findIndex((result) => result.id === id);
             updatedResults.splice(index, 1);
             return updatedResults;
         });
@@ -110,7 +111,6 @@ useEffect(() => {
     function handleCloseModal() {
         setShowModal(false);
     }
-
     return (
         <div className="sidebar">
             <h1 className="sidebar__title">BattleMap</h1>
@@ -124,7 +124,7 @@ useEffect(() => {
                 />
                 <ul className={autocompleteResults.length > 0 ? "autocomplete" : "autocomplete hidden"}>
                     {autocompleteResults.map((monster, index) => (
-                    <li key={uuid()} data-index={index} onClick={handleAutocompleteSelection}>
+                    <li key={monster.index} data-index={index} onClick={handleAutocompleteSelection}>
                         {monster.index}
                     </li>
                     ))}
@@ -133,7 +133,7 @@ useEffect(() => {
                     Search
                 </button>
             </form>
-                <Modal className='modal__container' isOpen={showModal} onRequestClose={handleCloseModal}>
+                <Modal appElement={document.getElementById('root')} className='modal__container' isOpen={showModal} onRequestClose={handleCloseModal}>
                     <AddPlayer closeModal={handleCloseModal} addPlayer={handleAddPlayer} />
                 </Modal>
             <button className="sidebar__addBtn" onClick={handleOpenModal}>
@@ -141,14 +141,14 @@ useEffect(() => {
             </button>
             <ul className="list">
             {searchResults.map((result, index) => (
-                <li key={uuid()}>
+                <li key={result.id || index}>
                 {result.challenge_rating ? (
                     <RenderMonsterCard 
                         addToken={addToken}
                         addMonsterToken={addMonsterToken}
                         monster={result} 
                         index={index} 
-                        removeCard={handleRemoveCard} 
+                        removeCard={() => handleRemoveCard(result.id)} 
                     />
                 ) : (
                     <RenderPlayerCard 
@@ -156,7 +156,7 @@ useEffect(() => {
                         addPlayerToken={addPlayerToken}
                         player={result} 
                         index={index} 
-                        removeCard={handleRemoveCard}
+                        removeCard={() => handleRemoveCard(result.id)}
                     />
                 )}
                 </li>
