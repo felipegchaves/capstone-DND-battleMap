@@ -10,14 +10,9 @@ Solution
     this will be able to help DMs articulate a battle situation on the fly without the need for physical tools. The DM will be able to show the players where monsters are moving and player will be able to think about their moves.
     While being simple it will help leave the rest of the game continue to be done via description and imagination.
 
-Tech stacks used
+Description
 
-    -react.js
-    -react-beautiful-dnd (removed due to complications)
-    -canvas element
-    -tailwind (removed due to time constraints)
-
-Upon start up user will load a 'login' page.
+    Upon start up user will load a 'login' page.
 
     while not actually a login page it is a placeholder until I can implement websockets that will
     allow the 'host' to create a room that will allow other users to come and 'watch' the room
@@ -33,6 +28,13 @@ Upon start up user will load a 'login' page.
     user can also add a character card
 
     these cards can be used to spawn tokens inside the canvas
+
+Tech stacks used
+
+    -react.js
+    -react-beautiful-dnd (removed due to complications)
+    -canvas element
+    -tailwind (removed due to time constraints)
 
 stepped away from using JWTs as it wasnt needed until i implement websockets.
 
