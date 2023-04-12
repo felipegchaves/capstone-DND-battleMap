@@ -117,7 +117,7 @@ useEffect(() => {
             <form onSubmit={(event) => {event.preventDefault(); searchMonster(search);}}>
                 <input
                     type="text"
-                    placeholder="Search"
+                    placeholder="Search Monster"
                     value={search}
                     onChange={handleSearch}
                     onKeyUp={handleAutocomplete}
