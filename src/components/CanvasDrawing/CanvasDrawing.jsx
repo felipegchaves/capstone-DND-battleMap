@@ -8,6 +8,9 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
   const [drawingPath, setDrawingPath] = useState([]);
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 0, height: 0 });
 
+  const [isEraserMode, setIsEraserMode] = useState(false);
+
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const initialWidth = window.innerWidth * 0.8;
@@ -37,7 +40,10 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
 
   useEffect(() => {
     const data = localStorage.getItem('battleMapLines');
-    if (data !== null ) setDrawingPath(JSON.parse(data));
+    if (data !== null ) {
+      setDrawingPath(JSON.parse(data));
+      refreshCanvas();
+    }
   }, []);
 
   useEffect(() => {
@@ -78,35 +84,67 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
     const { nativeEvent } = event;
     const { offsetX, offsetY } = nativeEvent;
     const { current: ctx } = ctxRef;
-
+  
     switch (event.type) {
       case "mousedown":
-        ctx.beginPath();
-        ctx.moveTo(offsetX, offsetY);
-        setIsDrawing(true);
-        setDrawingPath(prevPath => [...prevPath, { type: "start", x: offsetX, y: offsetY }]);
+        if (isEraserMode) {
+          // Start erasing
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.beginPath();
+          ctx.arc(offsetX, offsetY, 10, 0, 2 * Math.PI);
+          ctx.fill();
+          setIsDrawing(true);
+        } else {
+          // Start drawing
+          ctx.globalCompositeOperation = "source-over";
+          ctx.beginPath();
+          ctx.moveTo(offsetX, offsetY);
+          setIsDrawing(true);
+          setDrawingPath(prevPath => [...prevPath, { type: "start", x: offsetX, y: offsetY }]);
+        }
         break;
       case "mousemove":
         if (!isDrawing) {
           return;
         }
-        ctx.lineTo(offsetX, offsetY);
-        ctx.stroke();
-        // setDrawingPath(prevPath => [...prevPath, { type: "draw", x: offsetX, y: offsetY }]);
+        if (isEraserMode) {
+          // Erase
+          ctx.beginPath();
+          ctx.arc(offsetX, offsetY, 10, 0, 2 * Math.PI);
+          ctx.fill();
+        } else {
+          // Draw
+          ctx.lineTo(offsetX, offsetY);
+          ctx.stroke();
+          setDrawingPath(prevPath => [...prevPath, { type: "draw", x: offsetX, y: offsetY }]);
+        }
         break;
       case "mouseup":
-        ctx.closePath();
-        setIsDrawing(false);
-        setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
-        saveToLocalStorage();
+        if (isEraserMode) {
+          // Stop erasing
+          ctx.closePath();
+          setIsDrawing(false);
+        } else {
+          // Stop drawing
+          ctx.closePath();
+          setIsDrawing(false);
+          setDrawingPath(prevPath => [...prevPath, { type: "finish" }]);
+          saveToLocalStorage();
+        }
         break;
       default:
         break;
     }
   }
+  
 
-  function undo() {
-    setDrawingPath(prevPath => prevPath.slice(0, -1));
+  // function undo() {
+  //   setDrawingPath(prevPath => prevPath.slice(0, -1));
+  // }
+  
+
+  function toggleEraserMode() {
+    setIsEraserMode(!isEraserMode);
   }
 
   function refreshCanvas() {
@@ -145,7 +183,8 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
 
   return (
     <div className="canvas">
-      <ControlPanel clearCanvas={clearCanvas} clearTokens={clearTokens} undo={undo} />
+      <ControlPanel clearCanvas={clearCanvas} clearTokens={clearTokens} erase={toggleEraserMode} />
+
       <canvas
         className="canvas__background"
         // onMouseDown={startDrawing}
