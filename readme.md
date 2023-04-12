@@ -1,3 +1,8 @@
+Issues with Branches/develop
+
+    had alot of difficulties with branches because this was originally used as a test repo for many different code snippets.
+    I cleaned up the branches as best as i could(had difficulties adding a new 'develop'. it is now named 'development')
+
 Problem Space
 
     Keeping track of player/monster locations across multiple people through description only.
