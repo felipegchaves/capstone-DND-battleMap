@@ -34,6 +34,8 @@ Description
 
     these cards can be used to spawn tokens inside the canvas
 
+    mobile is NOT meant to have a canvas. mobile will be used to keep track of the added monsters/players to the list, or even to add monsters/players to the list
+
 Tech stacks used
 
     -react.js
