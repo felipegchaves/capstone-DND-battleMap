@@ -33,12 +33,20 @@ Tech stacks used
 
     -react.js
     -react-beautiful-dnd (removed due to complications)
+        -looking to implement drag and drop in the sidebar in the future
     -canvas element
     -tailwind (removed due to time constraints)
+    -tool top library to remove the words from buttons to instead have logos that could be more fitting
 
 stepped away from using JWTs as it wasnt needed until i implement websockets.
 
+    will add authentication and authorization when websockets are implemented.
+
 Things to add/change
+
+    will need to adjust and have a look at the dungeons and dragon api due to lack of images for some monsters. perhaps will have to add my own..
+
+    would like to have everything saved to a database, mainly, the canvas element and drawings with it. getting this to work will be key to having a smooth experience
 
     in hindsight, having the search monster would make more sense as a button that pops up a modal to be more similar to Add player feature.
 
