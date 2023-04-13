@@ -5,6 +5,7 @@ import anonMonster from '../../assets/monsterQuestionMark.png'
 import "./Homepage.scss";
 import { useRef, useState, useEffect } from "react";
 import { API_URL } from "../../utils/api";
+import { v4 as uuid } from 'uuid'
 
 export default function Homepage() {
   const canvasRef = useRef(null);
@@ -34,13 +35,14 @@ export default function Homepage() {
   }
   
   function addPlayerToken(player) {
-    let nextNumber = tokens.length + 1;
-    while (tokens.some(token => token.number === nextNumber)) {
-      nextNumber++;
-    }
+    // let nextNumber = tokens.length + 1;
+    // while (tokens.some(token => token.number === nextNumber)) {
+    //   nextNumber++;
+    // }
+    let nextNumber = uuid()
     const newToken = {
       id: nextNumber,
-      number: nextNumber,
+      // number: nextNumber,
       x: 100,
       y: 0,
       name: player.name,

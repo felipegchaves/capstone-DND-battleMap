@@ -177,8 +177,7 @@ export default function CanvasDrawing({ canvasRef, clearTokens }) {
 
   function clearCanvas() {
     ctxRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    setDrawingPath([]);
-    saveToLocalStorage();
+    localStorage.clear(); 
   }
 
   return (
