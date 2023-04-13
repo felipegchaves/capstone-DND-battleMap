@@ -6,7 +6,7 @@
     @include mixins.tablet {
         display: contents;
         position: relative;
-    max-width: 100%;
+        max-width: 100%;
     &__background {
         background-size: cover;
     @include mixins.tablet {
