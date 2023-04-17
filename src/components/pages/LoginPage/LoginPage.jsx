@@ -22,7 +22,7 @@ export default function LoginPage({ setUsername }) {
         <h1 className='login__title'>DND BattleMap</h1>
         <form className='login__form' onSubmit={handleLogin}>
           <label>
-            <span className='login__form--span'>Username:</span>
+            <span className='login__form--span'>Room Name:</span>
             <input className='login__form--username' type="text" name="username" value={usernameInput} onChange={handleUsernameChange} />
           </label>
           <button className='login__form--btn' type="submit">Login</button>
